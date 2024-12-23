@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NEET 3D Animation Viewer</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #1a1a1a;
+        }
+        #animation-container {
+            width: 512px;
+            height: 512px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #4a4a4a;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #5a5a5a;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+</head>
+<body>
+    <div>
+        <div id="animation-container"></div>
+        <div class="controls">
+            <button onclick="playAnimation()">Play</button>
+            <button onclick="pauseAnimation()">Pause</button>
+            <button onclick="stopAnimation()">Stop</button>
+        </div>
+    </div>
+
+    <script>
+        let anim;
+        
+        // Load the animation
+        fetch('lottie_animations/neet_3d_final.json')
+            .then(response => response.json())
+            .then(animationData => {
+                anim = lottie.loadAnimation({
+                    container: document.getElementById('animation-container'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    animationData: animationData
+                });
+            });
+
+        function playAnimation() {
+            anim.play();
+        }
+
+        function pauseAnimation() {
+            anim.pause();
+        }
+
+        function stopAnimation() {
+            anim.stop();
+        }
+    </script>
+</body>
+</html>

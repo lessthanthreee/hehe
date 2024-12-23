@@ -1,0 +1,83 @@
+{
+    "Moving_Average_Cross": {
+        "strategy": "Moving_Average_Cross",
+        "metrics": {
+            "total_trades": 0,
+            "winning_trades": 0,
+            "losing_trades": 0,
+            "total_pnl": 0,
+            "max_drawdown": 0,
+            "win_rate": 0,
+            "roi": 0
+        },
+        "trades": []
+    },
+    "RSI_MACD": {
+        "strategy": "RSI_MACD",
+        "metrics": {
+            "total_trades": 0,
+            "winning_trades": 0,
+            "losing_trades": 0,
+            "total_pnl": 0,
+            "max_drawdown": 0,
+            "win_rate": 0,
+            "roi": 0
+        },
+        "trades": []
+    },
+    "Bollinger_Bands": {
+        "strategy": "Bollinger_Bands",
+        "metrics": {
+            "total_trades": 0,
+            "winning_trades": 0,
+            "losing_trades": 0,
+            "total_pnl": 0,
+            "max_drawdown": 0,
+            "win_rate": 0,
+            "roi": 0
+        },
+        "trades": [
+            {
+                "type": "LONG",
+                "entry_price": 100422.0,
+                "size": "50000",
+                "timestamp": "2024-12-19T06:19:10.224197",
+                "portfolio_value": 1000
+            }
+        ]
+    },
+    "Volume_Weighted": {
+        "strategy": "Volume_Weighted",
+        "metrics": {
+            "total_trades": 0,
+            "winning_trades": 0,
+            "losing_trades": 0,
+            "total_pnl": 0,
+            "max_drawdown": 0,
+            "win_rate": 0,
+            "roi": 0
+        },
+        "trades": [
+            {
+                "type": "SHORT",
+                "entry_price": 100438.0,
+                "size": "50000",
+                "timestamp": "2024-12-19T06:54:12.429281",
+                "portfolio_value": 1000
+            }
+        ]
+    },
+    "Regression": {
+        "strategy": "Regression",
+        "metrics": {
+            "total_trades": 0,
+            "winning_trades": 0,
+            "losing_trades": 0,
+            "total_pnl": 0,
+            "max_drawdown": 0,
+            "win_rate": 0,
+            "roi": 0
+        },
+        "trades": []
+    }
+}

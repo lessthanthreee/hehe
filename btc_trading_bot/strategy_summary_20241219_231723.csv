@@ -1,0 +1,7 @@
+Strategy,Total_PnL,ROI,Win_Rate,Sharpe_Ratio,Profit_Factor,Avg_Trade_Duration,Total_Trades,Max_Drawdown
+Scalping,0,0,0,0,inf,0,0,0
+Moving_Average_Cross,0,0,0,0,inf,0,0,0
+Momentum,0,0,0,0,inf,0,0,0
+Bollinger_Bands,0,0,0,0,inf,0,0,0
+RSI_MACD,0,0,0,0,inf,0,0,0
+VWAP,0,0,0,0,inf,0,0,0

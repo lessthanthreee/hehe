@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dot Swarm Animation</title>
+    <style>
+        :root {
+            --primary: #eAAA00;
+            --text: #000000;
+            --white: #ffffff;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--primary);
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .text-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text);
+            font-size: 4vw;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+        }
+
+        .text-visible {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div class="text-overlay">YOUR LOGO</div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+        
+        const particles = [];
+        const symbols = {
+            initial: '▲',
+            text: 'iloveyou'
+        };
+        let currentSymbol = symbols.initial;
+        let mouse = { x: width/2, y: height/2, radius: 50 };
+        let isAnimating = true;
+
+        // Create an offscreen canvas for sampling points
+        const offscreen = document.createElement('canvas');
+        const offCtx = offscreen.getContext('2d');
+        const fontSize = Math.min(width, height) * 0.3;
+        offscreen.width = fontSize * 1.5;
+        offscreen.height = fontSize * 1.5;
+
+        function samplePoints(text, textSize = fontSize) {
+            offCtx.clearRect(0, 0, offscreen.width, offscreen.height);
+            offCtx.fillStyle = '#000';
+            offCtx.font = `${textSize}px Arial`;
+            offCtx.textAlign = 'center';
+            offCtx.textBaseline = 'middle';
+            offCtx.fillText(text, offscreen.width/2, offscreen.height/2);
+
+            const imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
+            const points = [];
+            const step = 2; 
+
+            for(let y = 0; y < imageData.height; y += step) {
+                for(let x = 0; x < imageData.width; x += step) {
+                    const alpha = imageData.data[((y * imageData.width) + x) * 4 + 3];
+                    if(alpha > 128) {
+                        points.push({
+                            x: x + (offscreen.width/2 - fontSize/2),
+                            y: y + (offscreen.height/2 - fontSize/2)
+                        });
+                    }
+                }
+            }
+            return points;
+        }
+
+        class Particle {
+            constructor(x, y) {
+                this.baseX = x;
+                this.baseY = y;
+                this.x = x + (Math.random() * 100 - 50);
+                this.y = y + (Math.random() * 100 - 50);
+                this.size = 1; 
+                this.density = (Math.random() * 20) + 10;
+                this.angle = Math.random() * Math.PI * 2;
+                this.velocity = 0.03;
+            }
+
+            draw() {
+                ctx.fillStyle = '#000';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.closePath();
+                ctx.fill();
+            }
+
+            update() {
+                let dx = mouse.x - this.x;
+                let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                let forceDirectionX = dx / distance;
+                let forceDirectionY = dy / distance;
+                
+                const maxDistance = mouse.radius;
+                let force = (maxDistance - distance) / maxDistance;
+                
+                if (force < 0) force = 0;
+                
+                let directionX = (forceDirectionX * force * this.density);
+                let directionY = (forceDirectionY * force * this.density);
+
+                if (distance < mouse.radius) {
+                    this.x -= directionX;
+                    this.y -= directionY;
+                } else {
+                    if (this.x !== this.baseX) {
+                        dx = this.x - this.baseX;
+                        this.x -= dx/20;
+                    }
+                    if (this.y !== this.baseY) {
+                        dy = this.y - this.baseY;
+                        this.y -= dy/20;
+                    }
+                }
+
+                this.angle += this.velocity;
+                this.x += Math.sin(this.angle) * 0.3;
+                this.y += Math.cos(this.angle) * 0.3;
+            }
+        }
+
+        function updateParticles(newPoints) {
+            // Remove excess particles
+            if (particles.length > newPoints.length) {
+                particles.splice(newPoints.length);
+            }
+
+            // Update existing particles with new positions
+            for (let i = 0; i < newPoints.length; i++) {
+                if (particles[i]) {
+                    particles[i].baseX = newPoints[i].x + (width/2 - offscreen.width/2);
+                    particles[i].baseY = newPoints[i].y + (height/2 - offscreen.height/2);
+                } else {
+                    particles.push(new Particle(
+                        newPoints[i].x + (width/2 - offscreen.width/2),
+                        newPoints[i].y + (height/2 - offscreen.height/2)
+                    ));
+                }
+            }
+        }
+
+        function init() {
+            const points = samplePoints(currentSymbol);
+            updateParticles(points);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            init();
+        });
+
+        document.addEventListener('click', () => {
+            currentSymbol = currentSymbol === symbols.initial ? symbols.text : symbols.initial;
+            const textSize = currentSymbol === symbols.text ? fontSize * 0.2 : fontSize; 
+            const points = samplePoints(currentSymbol, textSize);
+            updateParticles(points);
+        });
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

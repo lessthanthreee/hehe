@@ -1,0 +1,33 @@
+--- request header ---
+GET /ws HTTP/1.1
+Upgrade: websocket
+Host: api.hyperliquid.xyz
+Origin: https://api.hyperliquid.xyz
+Sec-WebSocket-Key: p16IQSIpCR3ZSLwcOeOUUw==
+Sec-WebSocket-Version: 13
+Connection: Upgrade
+
+
+-----------------------
+--- response header ---
+HTTP/1.1 101 Switching Protocols
+Server: nginx/1.22.1
+Date: Thu, 19 Dec 2024 22:16:37 GMT
+Connection: upgrade
+upgrade: websocket
+sec-websocket-accept: m/2sZ5+V+DEH2yW+O4a5k4LzzPk=
+access-control-allow-origin: *
+vary: origin
+vary: access-control-request-method
+vary: access-control-request-headers
+access-control-expose-headers: *
+-----------------------
+Websocket connected
+WebSocket connection opened
+++Sent raw: b"\x81\xaeH\\\x05|3~f\x14)2k\x19$~?\\j(w\x1d,9v^d|'\x18)(d^r|~^+3l\x12jf%^\n\x08F^5!"
+++Sent decoded: fin=1 opcode=1 data=b'{"channel": "trades", "data": {"coin": "BTC"}}'
+++Rcv raw: b'\x81~\x00\x86{"channel":"error","data":"Error parsing JSON into valid websocket request: {\\"channel\\": \\"trades\\", \\"data\\": {\\"coin\\": \\"BTC\\"}}"}'
+++Rcv decoded: fin=1 opcode=1 data=b'{"channel":"error","data":"Error parsing JSON into valid websocket request: {\\"channel\\": \\"trades\\", \\"data\\": {\\"coin\\": \\"BTC\\"}}"}'
+WebSocket error: Connection to remote host was lost.
+Connection to remote host was lost. - goodbye
+WebSocket connection closed
